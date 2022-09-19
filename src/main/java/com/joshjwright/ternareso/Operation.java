@@ -1,4 +1,4 @@
-package com.joshjwright.ternareso.model;
+package com.joshjwright.ternareso;
 
 /**
  * This class provides the valid operations
@@ -8,6 +8,5 @@ public enum Operation {
 	DECREMENT,
 	LEFT,
 	RIGHT,
-	RETURN,
-	RECURSE
+	RETURN
 }

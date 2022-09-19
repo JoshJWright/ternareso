@@ -1,8 +1,5 @@
 package com.joshjwright.ternareso;
 
-import com.joshjwright.ternareso.model.Operation;
-import com.joshjwright.ternareso.model.Ternary;
-
 /**
  * This class processes a string and attempts to build a list of operations to perform.
  */
@@ -10,7 +7,7 @@ public final class Tokeniser {
 
 	private Tokeniser() {}
 
-	public static Ternary tokenise(final String inputString) {
+	public static Ternary tokenise(final String inputString) throws TernaryParseException {
 
 		var index = 0;
 		final char[] input = inputString.toCharArray();
@@ -34,14 +31,15 @@ public final class Tokeniser {
 					parent.setFailure(failure);
 					current = failure;
 				}
-				case '+' -> current.getPreamble().add(Operation.INCREMENT);
-				case '-' -> current.getPreamble().add(Operation.DECREMENT);
-				case '<' -> current.getPreamble().add(Operation.LEFT);
-				case '>' -> current.getPreamble().add(Operation.RIGHT);
-				case '\\' -> current.getPreamble().add(Operation.RETURN);
-				case '/' -> current.getPreamble().add(Operation.RECURSE);
+				case '+' -> addOperation(Operation.INCREMENT, current, index);
+				case '-' -> addOperation(Operation.DECREMENT, current, index);
+				case '<' -> addOperation(Operation.LEFT, current, index);
+				case '>' -> addOperation(Operation.RIGHT, current, index);
+				case '\\' -> {
+					current.setReturnLevel(current.getReturnLevel() + 1);
+				}
 
-				default -> throw new RuntimeException(
+				default -> throw new TernaryParseException(
 						String.format("Failed to recognise character %s at index %d", input[index], index));
 			}
 			index++;
@@ -49,11 +47,21 @@ public final class Tokeniser {
 		return root;
 	}
 
-	private static Ternary getParentForBranch(final Ternary current, final int index) {
+	private static void addOperation(final Operation op, final Ternary current, final int index) throws TernaryParseException {
+		if (current.getReturnLevel() != 0) {
+			throw new TernaryParseException(String.format(
+					"Cannot perform any operations after a return statement. Attempting to perform %s at index %d.", op,
+					index));
+		} else {
+			current.getPreamble().add(op);
+		}
+	}
+
+	private static Ternary getParentForBranch(final Ternary current, final int index) throws TernaryParseException {
 		if (current.getParent() == null) {
-			throw new RuntimeException(
+			throw new TernaryParseException(
 					String.format("':' encountered at index %d without corresponding '?'", index));
-		}else if (current.getParent().isTest() && current.getParent().getFailure() == null) {
+		} else if (current.getParent().isTest() && current.getParent().getFailure() == null) {
 			return current.getParent();
 		} else {
 			return getParentForBranch(current.getParent(), index);

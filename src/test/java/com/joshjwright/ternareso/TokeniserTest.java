@@ -1,14 +1,13 @@
 package com.joshjwright.ternareso;
 
-import com.joshjwright.ternareso.model.Ternary;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TokeniserTest {
 
 	@Test
-	void testParsing() {
-		final String input = "+++++?-----?>>>>>:<<<<<?/////:\\\\\\\\\\:+-<>/\\";
+	void testParsing() throws Exception {
+		final String input = "+++++?-----?>>>>>:<<<<<?\\\\\\\\\\:+-<>\\:+-<>\\";
 
 		final Ternary output = Tokeniser.tokenise(input);
 
@@ -42,26 +41,21 @@ public class TokeniserTest {
 										    	LEFT\s
 										    IF ZERO:\s
 										      EXECUTE:
-										      	RECURSE
-										      	RECURSE
-										      	RECURSE
-										      	RECURSE
-										      	RECURSE
+										      		THEN RETURN 5 LEVELS
 										     ELSE:\s
 										      EXECUTE:
-										      	RETURN
-										      	RETURN
-										      	RETURN
-										      	RETURN
-										      	RETURN
+										      	INCREMENT
+										      	DECREMENT
+										      	LEFT
+										      	RIGHT
+										      		THEN RETURN 1 LEVELS
 										 ELSE:\s
 										  EXECUTE:
 										  	INCREMENT
 										  	DECREMENT
 										  	LEFT
 										  	RIGHT
-										  	RECURSE
-										  	RETURN
+										  		THEN RETURN 1 LEVELS
 										""", output.toString());
 	}
 
