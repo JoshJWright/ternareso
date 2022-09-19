@@ -48,6 +48,22 @@ public class State {
 		return tape[address] == 0;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("[");
+		var i = 0;
+		while (i < tapeLength) {
+			if (i == address) {
+				sb.append('(').append(tape[i]).append("), ");
+			} else {
+				sb.append(tape[i]).append(", ");
+			}
+			i++;
+		}
+		sb.delete(sb.length() - 2, sb.length()).append("]");
+		return sb.toString();
+	}
+
 	public int[] getTape() {
 		return tape.clone();
 	}

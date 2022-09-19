@@ -39,8 +39,7 @@ public final class Tokeniser {
 					current.setReturnLevel(current.getReturnLevel() + 1);
 				}
 
-				default -> throw new TernaryParseException(
-						String.format("Failed to recognise character %s at index %d", input[index], index));
+				default -> {} // Ignore all other characters
 			}
 			index++;
 		}

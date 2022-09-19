@@ -1,0 +1,14 @@
+If equal, ensure cell 2 is 0, if unequal, cell 2 will be nonzero
+
+++>++
+?
+    <
+    ?>>\\\
+    :>>+\\\
+:
+    ->+<
+    ?
+        <
+        ?>>\\\\
+        :->>-<\
+    :\

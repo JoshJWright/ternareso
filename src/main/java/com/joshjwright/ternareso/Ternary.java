@@ -22,6 +22,7 @@ public class Ternary {
 				case INCREMENT, DECREMENT, LEFT, RIGHT -> {
 					try {
 						state.apply(op);
+						System.out.printf("%s -> %s%n", op, state);
 					} catch (TernaryStateException e) {
 						throw new TernaryExecutionException(e);
 					}
@@ -34,11 +35,10 @@ public class Ternary {
 		}
 
 		if (test) {
-			if (state.test()) {
-				return success.execute(state);
-			} else {
-				return failure.execute(state);
+			if (success == null || failure == null) {
+				throw new TernaryExecutionException("Ternary was misconfigured and does not have both success and failure paths.");
 			}
+			return state.test() ? success.execute(state) : failure.execute(state);
 		}
 
 		return state;
